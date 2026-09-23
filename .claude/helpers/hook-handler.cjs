@@ -389,6 +389,15 @@ const handlers = {
       console.log('[INFO] Router not available, using default routing');
     }
 
+    if (router && router.recommendModel) {
+      try {
+        const modelResult = router.recommendModel(prompt);
+        console.log('');
+        console.log(`[TASK_MODEL_RECOMMENDATION] Use model="${modelResult.model}" for this task`);
+        console.log(`Complexity: ${(modelResult.complexity * 100).toFixed(0)}% | ${modelResult.reasoning}`);
+      } catch (e) { /* non-fatal — heuristic-only, never block the prompt */ }
+    }
+
     // Rate-limit -> sponsored-capacity nudge (ADR-312/313). Fires here,
     // client-side, BEFORE the API call this prompt would make — so it still
     // reaches the transcript even if that call then fails from the rate
